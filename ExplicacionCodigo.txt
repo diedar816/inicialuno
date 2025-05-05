@@ -1,0 +1,118 @@
+pnpm add @nestjs/typeorm typeorm@0.3.17 mariadb class-validator@0.14.0 class-transformer@0.5.1
+
+persona.entity.ts
+
+Este archivo define cómo se verá la tabla persona en la base de datos. Cada propiedad (nombre, correo, etc.) será una columna. 
+El decorador @Entity() indica que esta clase representa una tabla, y los @Column() indican los campos de esa tabla.
+
+
+persona.service.ts
+
+Este servicio encapsula toda la lógica de acceso a la base de datos para la entidad Persona. Gracias a TypeORM, podemos 
+usar métodos como .find(), .save(), .update() y .delete() directamente sin escribir SQL.
+
+¡Sí! El archivo persona.service.ts que compartiste está perfectamente bien. Si ya lo tienes así, está listo para ser usado. Con los 
+métodos create(), findAll(), findOne(), update() y remove(), todo está configurado correctamente para trabajar con las operaciones CRUD en tu base de datos.
+
+✅ Resumen del servicio:
+El servicio tiene los métodos necesarios para interactuar con la base de datos usando TypeORM.
+
+Los métodos están usando Promise<Persona> y Promise<Persona[]> correctamente según el tipo de datos que devuelven.
+
+Cannot find module './dto/create-persona.dto' or its corresponding type declarations.ts(2307)
+
+create-persona.dto.ts
+
+¡Claro! Te explico en detalle qué hacen y por qué son importantes los archivos create-persona.dto.ts y update-persona.dto.ts en tu aplicación. Ambos son DTOs (Data Transfer Objects) y su principal propósito es gestionar los datos que se reciben en las peticiones HTTP y validarlos antes de que lleguen a la base de datos.
+
+📄 ¿Qué es un DTO?
+Un DTO (Data Transfer Object) es un objeto que transporta datos entre diferentes capas de la aplicación. En este caso, entre la capa de controladores (que recibe las peticiones HTTP) y la capa de servicios (que se encarga de la lógica de negocio y la interacción con la base de datos).
+
+En NestJS, los DTOs se utilizan para:
+
+Definir cómo debe ser la estructura de los datos (qué campos son obligatorios, qué tipo de datos deben tener, etc.).
+
+Validar que los datos recibidos en las peticiones cumplen con ciertas reglas.
+
+1. 📄 create-persona.dto.ts — Para crear una persona
+Este archivo define el formato y las validaciones de los datos que se requieren cuando creamos una nueva persona en la base de datos.
+
+Explicación:
+@IsString(): Asegura que el campo es una cadena de texto.
+
+@IsNotEmpty(): Asegura que el campo no esté vacío.
+
+@IsEmail(): Verifica que el campo sea un correo electrónico válido.
+
+Todos los campos son obligatorios para crear una persona, ya que usamos @IsNotEmpty() en cada uno de ellos.
+
+Cuando se recibe una petición POST para crear una nueva persona, el controlador usa este DTO para asegurarse de que los datos sean correctos antes de ser enviados al servicio para ser guardados en la base de datos.
+
+
+update-persona.dto.ts
+
+Para actualizar una persona
+Este archivo es similar al anterior, pero está diseñado para actualizar una persona ya existente. En este caso, no todos los campos son obligatorios porque solo vamos a actualizar los que recibimos.
+
+Explicación:
+@IsOptional(): Esta validación es la clave aquí. Indica que el campo es opcional. En lugar de requerir todos los campos como en la creación, con la actualización solo necesitamos los campos que el usuario quiere cambiar.
+
+Al igual que en el DTO de creación, usamos @IsString() para los campos de texto, y @IsEmail() para validar el correo.
+
+Este DTO se usa cuando se recibe una petición PUT o PATCH para actualizar una persona existente. Solo se actualizan los campos que se proporcionan, y no es necesario enviar todos los campos (por ejemplo, podemos actualizar solo el correo o el cargo).
+
+¿Por qué son importantes estos DTOs?
+Validación de datos: Usamos class-validator para asegurarnos de que los datos recibidos en las peticiones sean válidos antes de guardarlos en la base de datos. Esto es crucial para evitar que los usuarios ingresen datos incorrectos o mal formateados.
+
+Estructura consistente: Los DTOs definen la estructura de los datos que se esperan en la API, lo que ayuda a mantener el código más limpio y predecible.
+
+Seguridad: Al validar los datos antes de interactuar con la base de datos, evitamos posibles ataques como inyección SQL o datos maliciosos.
+
+🔍 Resumen:
+create-persona.dto.ts: Define los datos necesarios para crear una nueva persona y valida que sean correctos (todos son obligatorios).
+
+update-persona.dto.ts: Define los datos necesarios para actualizar una persona existente y permite que solo algunos campos sean opcionales.
+
+
+¿Por qué necesitamos estos DTOs?
+DTO (Data Transfer Object) es un patrón que se usa para definir cómo se deben transferir los datos entre capas 
+(en este caso, entre la capa de entrada y la base de datos).
+
+Validaciones: Usamos class-validator para asegurarnos de que los datos recibidos en las peticiones sean correctos.
+
+
+persona.controller.ts
+
+Este es el archivo que gestionará las rutas HTTP de la API, como GET, POST, PATCH, y DELETE para interactuar con los datos de Persona.
+
+Explicación rápida:
+@Get(): Maneja la petición HTTP GET. En este caso, se usa para obtener todas las personas o una persona específica por su id.
+
+@Post(): Maneja la creación de una nueva persona.
+
+@Patch(): Maneja la actualización de una persona por su id.
+
+@Delete(): Maneja la eliminación de una persona por su id.
+
+@Param(): Se usa para capturar los parámetros de la URL, como el id.
+
+@Body(): Se usa para capturar los datos que se envían en el cuerpo de la petición (como al crear o actualizar una persona).
+
+persona.module.ts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
